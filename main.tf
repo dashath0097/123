@@ -11,7 +11,6 @@ provider "spacelift" {
   # Spacelift API credentials (configure via environment variables)
 }
 
-provider "spacelift" {}
 
 # Fetch all stacks dynamically
 data "spacelift_stacks" "all_stacks" {}
