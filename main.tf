@@ -2,7 +2,7 @@ terraform {
   required_providers {
     spacelift = {
       source  = "spacelift-io/spacelift"
-      version = "~> 1.0"  # Use the latest version
+      version = "~> 1.0"  # Ensure latest compatible version
     }
   }
 }
@@ -19,15 +19,20 @@ resource "spacelift_policy" "iam_policy" {
   type        = "ACCESS"
 }
 
-# Retrieve all Spacelift stacks
-data "spacelift_stacks" "all_stacks" {}
-
-# Attach the policy to all stacks
-resource "spacelift_policy_attachment" "iam_policy_attachment" {
-  for_each   = { for stack in data.spacelift_stacks.all_stacks.stacks : stack.id => stack.id }
-  policy_id  = spacelift_policy.iam_policy.id
-  stack_id   = each.value
+# Define known stack names (replace with actual names)
+locals {
+  stack_names = ["aditya_2", "demo2"]  # Add all stack names here
 }
 
+# Fetch stack details for each stack name
+data "spacelift_stack" "all_stacks" {
+  for_each = toset(local.stack_names)
+  name     = each.value
+}
 
-
+# Attach the policy to all stacks by stack name
+resource "spacelift_policy_attachment" "iam_policy_attachment" {
+  for_each  = data.spacelift_stack.all_stacks
+  policy_id = spacelift_policy.iam_policy.id
+  stack_id  = each.value.id
+}
