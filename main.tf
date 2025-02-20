@@ -21,11 +21,4 @@ resource "spacelift_policy_attachment" "iam_policy_attachment" {
 }
 
 
-# Attach policy to all stacks dynamically
-resource "spacelift_policy_attachment" "iam_policy_attachment" {
-  for_each  = { for stack in data.spacelift_stacks.all_stacks.stacks : stack.context => stack.context }
-
-  stack_id  = each.value
-  policy_id = spacelift_policy.iam_policy_approval.id
-}
 
