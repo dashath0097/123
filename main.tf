@@ -21,8 +21,8 @@ resource "spacelift_policy" "iam_policy_approval" {
 }
 
 # Attach policy to all stacks
-resource "spacelift_stack_policy_attachment" "iam_policy_attachment" {
-  for_each  = toset(data.spacelift_stacks.all_stacks.ids)
+resource "spacelift_policy_attachment" "iam_policy_attachment" {
+  for_each  = { for stack in data.spacelift_stacks.all_stacks.stacks : stack.id => stack }
 
   stack_id  = each.key
   policy_id = spacelift_policy.iam_policy_approval.id
