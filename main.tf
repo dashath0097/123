@@ -14,7 +14,7 @@ provider "spacelift" {
 resource "spacelift_policy" "iam_policy_approval" {
   name = "require_security_approval_for_iam_policy"
   type = "PLAN"
-  body = file("iam_policy_approval.rego")
+  body = file("iam_policy.rego")
 }
 
 # Attach policy to a specific stack
