@@ -12,15 +12,14 @@ provider "spacelift" {
 }
 
 
-# Fetch all stacks dynamically
 data "spacelift_stacks" "all_stacks" {}
 
-# Define the policy
-resource "spacelift_policy" "iam_policy_approval" {
-  name = "require_security_approval_for_iam_policy"
-  type = "PLAN"
-  body = file("iam_policy_approval.rego")
+resource "spacelift_policy_attachment" "iam_policy_attachment" {
+  for_each   = { for stack in data.spacelift_stacks.all_stacks.stacks : stack.id => stack.id }
+  policy_id  = spacelift_policy.iam_policy.id
+  stack_id   = each.value
 }
+
 
 # Attach policy to all stacks dynamically
 resource "spacelift_policy_attachment" "iam_policy_attachment" {
