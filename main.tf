@@ -10,7 +10,6 @@ terraform {
 provider "spacelift" {
   # Spacelift API credentials (configure via environment variables)
 }
-provider "spacelift" {}
 
 # Fetch all stacks
 data "spacelift_stacks" "all_stacks" {}
